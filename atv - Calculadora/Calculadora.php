@@ -49,13 +49,13 @@ if(isset($_GET['n1'], $_GET['n2'], $_GET['Operacao'])){
             $result = -$n1;
             break;
         case 'Seno':
-            $result = sin(deg2rad($n1)); // Converte graus para radianos
+            $result = sin(deg2rad($n1));
             break;
         case 'Cosseno':
-            $result = cos(deg2rad($n1)); // Converte graus para radianos
+            $result = cos(deg2rad($n1));
             break;
         case 'Tangente':
-            $result = tan(deg2rad($n1)); // Converte graus para radianos
+            $result = tan(deg2rad($n1));
             break;
     }
 }
