@@ -1,0 +1,67 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    background-image: url("img/Wings of Honour Screenshot 2024.08.27 - 22.17.09.37.png");
+    color: cyan;
+}
+
+p, label, input, textarea {
+    display: block;
+    margin: 10px;
+}
+
+input, textarea {
+    color: black;
+}
+
+section {
+    background-color: black;
+    width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 10px 20px 20px 10px #20223f;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    margin-top: 80px;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="submit"] {
+    margin-top: 20px;
+}
+
+table {
+    width: 80%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid cyan;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #20223f;
+}
+
+.acoes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+a {
+    text-decoration: none;
+    color: cyan;
+}
