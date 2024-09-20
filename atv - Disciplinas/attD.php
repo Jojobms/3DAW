@@ -1,41 +1,37 @@
 <?php
-function carregarDisciplinas() {
-    $listaDisciplinas = [];
-    if (file_exists("disciplinas.txt")) {
-        $arquivo = fopen("disciplinas.txt", "r") or die("Erro ao abrir arquivo");
-        while (($linha = fgets($arquivo)) !== false) {
-            $linha = trim($linha);
-            if ($linha != "" && $linha != "nome;sigla;carga") {
-                $listaDisciplinas[] = explode(";", $linha);
-            }
-        }
-        fclose($arquivo);
+function mostraDisc() {
+    if (!file_exists("disciplinas.txt")) {
+        return [];
     }
-    return $listaDisciplinas;
+    return array_map(function($linha) {
+        return explode(";", trim($linha));
+    }, array_filter(file("disciplinas.txt"), function($linha) {
+        return trim($linha) && strpos($linha, 'nome;sigla;carga') === false;
+    }));
 }
 
-function salvarDisciplinas($listaDisciplinas) {
-    $arquivo = fopen("disciplinas.txt", "w") or die("Erro ao abrir arquivo");
-    fwrite($arquivo, "nome;sigla;carga\n");
-    foreach ($listaDisciplinas as $disciplina) {
-        fwrite($arquivo, implode(";", $disciplina) . "\n");
-    }
-    fclose($arquivo);
+function saveDisc($listaDisciplinas) {
+    $dados = "nome;sigla;carga\n";
+    $dados .= implode("\n", array_map(function($disciplina) {
+        return implode(";", $disciplina);
+    }, $listaDisciplinas)) . "\n";
+    file_put_contents("disciplinas.txt", $dados) or die("Erro ao abrir arquivo");
 }
 
-function atualizarDisciplina($indice, $nome, $sigla, $carga) {
-    $listaDisciplinas = carregarDisciplinas();
-    if (isset($listaDisciplinas[$indice])) {
-        $listaDisciplinas[$indice] = [$nome, $sigla, $carga];
-        salvarDisciplinas($listaDisciplinas);
-        return "Disciplina atualizada com sucesso!";
+function attDisc($indice, $nome, $sigla, $carga) {
+    $listaDisciplinas = mostraDisc();
+    if (!isset($listaDisciplinas[$indice])) {
+        return "Disciplina não encontrada!";
     }
-    return "Disciplina não encontrada!";
+    $listaDisciplinas[$indice] = [$nome, $sigla, $carga];
+    saveDisc($listaDisciplinas);
+    return "Disciplina atualizada com sucesso!";
 }
 
 
 $mensagemAtualizacao = "";
-$disciplinas = carregarDisciplinas();
+$disciplinas = mostraDisc();
+
 
 if (isset($_GET['indice'])) {
     $indice = $_GET['indice'];
@@ -44,14 +40,15 @@ if (isset($_GET['indice'])) {
     die("Disciplina não encontrada.");
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $indice = $_POST["indice"];
-    $nome = $_POST["nome"];
-    $sigla = $_POST["sigla"];
-    $carga = $_POST["carga"];
-    $mensagemAtualizacao = atualizarDisciplina($indice, $nome, $sigla, $carga);
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    $disciplinas = mostraDisc();
+    $indice = $_POST['indice'];
+    $disciplinas[$indice] = [$_POST['nome'], $_POST['sigla'], $_POST['carga']];
+    saveDisc($disciplinas);
+    echo "<script>alert('Disciplina atualizada com sucesso!'); window.location.href = 'lêD.php';</script>";
+    exit;
+}
 ?>
 
 <!DOCTYPE html>

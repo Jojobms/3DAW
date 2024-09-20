@@ -1,35 +1,30 @@
 <?php
 
-function carregarDisciplinas() {
-    $listaDisciplinas = [];
-    if (file_exists("disciplinas.txt")) {
-        $arquivo = fopen("disciplinas.txt", "r") or die("Erro ao abrir arquivo");
-        while (($linha = fgets($arquivo)) !== false) {
-            $linha = trim($linha);
-            if ($linha != "" && $linha != "nome;sigla;carga") {
-                $listaDisciplinas[] = explode(";", $linha);
-            }
-        }
-        fclose($arquivo);
+function mostraDisc() {
+    if (!file_exists("disciplinas.txt")) {
+        return [];
     }
-    return $listaDisciplinas;
+    return array_map(function($linha) {
+        return explode(";", trim($linha));
+    }, array_filter(file("disciplinas.txt"), function($linha) {
+        return trim($linha) && strpos($linha, 'nome;sigla;carga') === false;
+    }));
 }
-function buscarDisciplinaPorSigla($sigla) {
-    $listaDisciplinas = carregarDisciplinas();
-    foreach ($listaDisciplinas as $disciplina) {
-        if (strcasecmp($disciplina[1], $sigla) == 0) {
-            return $disciplina;
-        }
+
+function caçaDisc($sigla) {
+    foreach (mostraDisc() as $disciplina) {
+        if (!strcasecmp($disciplina[1], $sigla)) return $disciplina;
     }
     return null;
 }
+
 
 $mensagemBusca = "";
 $disciplina = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sigla = $_POST['sigla'];
-    $disciplina = buscarDisciplinaPorSigla($sigla);
+    $disciplina = caçaDisc($sigla);
     if ($disciplina) {
         $mensagemBusca = "Disciplina encontrada!";
     } else {

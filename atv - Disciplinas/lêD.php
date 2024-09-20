@@ -1,21 +1,16 @@
 <?php
-function carregarDisciplinas() {
-    $listaDisciplinas = [];
-    if (file_exists("disciplinas.txt")) {
-        $arquivo = fopen("disciplinas.txt", "r") or die("Erro ao abrir arquivo");
-        while (($linha = fgets($arquivo)) !== false) {
-            $linha = trim($linha);
-            if ($linha != "" && $linha != "nome;sigla;carga") {
-                $listaDisciplinas[] = explode(";", $linha);
-            }
-        }
-        fclose($arquivo);
+function mostraDisc() {
+    if (!file_exists("disciplinas.txt")) {
+        return [];
     }
-    return $listaDisciplinas;
+    return array_map(function($linha) {
+        return explode(";", trim($linha));
+    }, array_filter(file("disciplinas.txt"), function($linha) {
+        return trim($linha) && strpos($linha, 'nome;sigla;carga') === false;
+    }));
 }
 
-
-$disciplinas = carregarDisciplinas();
+$disciplinas = mostraDisc();
 ?>
 
 <!DOCTYPE html>
@@ -42,9 +37,7 @@ $disciplinas = carregarDisciplinas();
         <td><?php echo $disciplina[1]; ?></td>
         <td><?php echo $disciplina[2]; ?></td>
         <td>
-            <!-- Link para editar a disciplina -->
             <a href="attD.php?indice=<?php echo $index; ?>">Editar</a> |
-            <!-- Link para excluir a disciplina -->
             <a href="delD.php?indice=<?php echo $index; ?>" onclick="return confirm('Tem certeza que deseja excluir esta disciplina?');">Excluir</a>
         </td>
     </tr>

@@ -1,43 +1,39 @@
 <?php
-function carregarDisciplinas() {
-    $listaDisciplinas = [];
-    if (file_exists("disciplinas.txt")) {
-        $arquivo = fopen("disciplinas.txt", "r") or die("Erro ao abrir arquivo");
-        while (($linha = fgets($arquivo)) !== false) {
-            $linha = trim($linha);
-            if ($linha != "" && $linha != "nome;sigla;carga") {
-                $listaDisciplinas[] = explode(";", $linha);
-            }
-        }
-        fclose($arquivo);
+function mostraDisc() {
+    if (!file_exists("disciplinas.txt")) {
+        return [];
     }
-    return $listaDisciplinas;
+    return array_map(function($linha) {
+        return explode(";", trim($linha));
+    }, array_filter(file("disciplinas.txt"), function($linha) {
+        return trim($linha) && strpos($linha, 'nome;sigla;carga') === false;
+    }));
+}
+
+function saveDisc($listaDisciplinas) {
+    $dados = "nome;sigla;carga\n";
+    $dados .= implode("\n", array_map(function($disciplina) {
+        return implode(";", $disciplina);
+    }, $listaDisciplinas)) . "\n";
+    file_put_contents("disciplinas.txt", $dados) or die("Erro ao abrir arquivo");
 }
 
 
-function salvarDisciplinas($listaDisciplinas) {
-    $arquivo = fopen("disciplinas.txt", "w") or die("Erro ao abrir arquivo");
-    fwrite($arquivo, "nome;sigla;carga\n");
-    foreach ($listaDisciplinas as $disciplina) {
-        fwrite($arquivo, implode(";", $disciplina) . "\n");
-    }
-    fclose($arquivo);
+function apgDisc($indice) {
+    $disciplinas = mostraDisc();
+    if (!isset($disciplinas[$indice])) return "Disciplina não encontrada!";
+    
+    unset($disciplinas[$indice]);
+    saveDisc(array_values($disciplinas));
+    
+    return "Disciplina excluída com sucesso!";
 }
 
-function excluirDisciplina($indice) {
-    $listaDisciplinas = carregarDisciplinas();
-    if (isset($listaDisciplinas[$indice])) {
-        unset($listaDisciplinas[$indice]);
-        salvarDisciplinas(array_values($listaDisciplinas)); 
-        return "Disciplina excluída com sucesso!";
-    }
-    return "Disciplina não encontrada!";
-}
 
 $mensagemExclusao = "";
 if (isset($_GET['indice'])) {
     $indice = $_GET['indice'];
-    $mensagemExclusao = excluirDisciplina($indice);
+    $mensagemExclusao = apgDisc($indice);
 } else {
     die("Disciplina não encontrada.");
 }
