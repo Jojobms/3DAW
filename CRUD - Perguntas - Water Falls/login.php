@@ -69,13 +69,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </section>
 
 <a href="index.php">Não tem conta? Cadastre-se aqui.</a>
-
-</body>
-</html>
-tbody td:hover {
-    background-color: #b71c1c;
-
-    & a{
-        color: black;
-    }
-}
