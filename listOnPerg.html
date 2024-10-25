@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Pergunta</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function buscarPergunta(event) {
+            event.preventDefault();
+            const numero = document.getElementById('numero').value;
+
+            fetch(`listOnPerg.php?numero=${numero}`)
+                .then(response => response.json())
+                .then(data => {
+                    const mensagemBusca = document.getElementById('mensagemBusca');
+                    const tabelaPergunta = document.getElementById('tabelaPergunta');
+                    
+                    if (data.pergunta) {
+                        mensagemBusca.textContent = "Pergunta encontrada!";
+                        tabelaPergunta.innerHTML = `
+                            <tr>
+                                <th>Número</th>
+                                <th>Pergunta</th>
+                                <th>Opção A</th>
+                                <th>Opção B</th>
+                                <th>Opção C</th>
+                                <th>Opção D</th>
+                                <th>Resposta Correta</th>
+                                <th>Ações</th>
+                            </tr>
+                            <tr>
+                                <td>${data.pergunta[0]}</td>
+                                <td>${data.pergunta[1]}</td>
+                                <td>${data.pergunta[2]}</td>
+                                <td>${data.pergunta[3]}</td>
+                                <td>${data.pergunta[4]}</td>
+                                <td>${data.pergunta[5]}</td>
+                                <td>${data.pergunta[6]}</td>
+                                <td>
+                                    <a href="altPeRmulti.html?indice=${data.indice}">Editar</a> |
+                                    <a href="excPeR.php?indice=${data.indice}" onclick="return confirm('Tem certeza que deseja excluir esta pergunta?');">Excluir</a>
+                                </td>
+                            </tr>`;
+                    } else {
+                        mensagemBusca.textContent = "Pergunta não encontrada.";
+                        tabelaPergunta.innerHTML = ''; 
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+
+<h1>Buscar Pergunta por Número</h1>
+
+<section>
+    <form onsubmit="buscarPergunta(event)">
+        <label for="numero">Número:</label>
+        <input type="number" name="numero" id="numero" required>
+        <input type="submit" value="Buscar">
+    </form>
+
+    <p id="mensagemBusca"></p>
+
+    <table id="tabelaPergunta"></table>
+</section>
+
+<a href="listAllPeR.html">Voltar à lista de perguntas</a>
+</body>
+</html>

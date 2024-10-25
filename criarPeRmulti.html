@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Criar Pergunta</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function criarPergunta() {
+            let formData = new FormData(document.getElementById("formPergunta"));
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "criaPeRmulti.php", true);
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    console.log(this.status); 
+                    console.log(this.responseText);
+                    if (this.status === 200) {
+                        document.getElementById("mensagemCriacao").innerHTML = this.responseText;
+                    } else {
+                        document.getElementById("mensagemCriacao").innerHTML = "Erro ao cadastrar a pergunta: ";
+                    }
+                }
+            };
+            xmlhttp.send(formData);
+        }
+    </script>
+</head>
+<body>
+
+<h1>Criar nova pergunta</h1>
+<section>
+    <form id="formPergunta" method="POST" onsubmit="event.preventDefault(); criarPergunta();">
+        <label for="numero">Número da pergunta:</label>
+        <input type="number" name="numero" id="numero" required><br>
+
+        <label for="pergunta">Pergunta:</label>
+        <input type="text" name="pergunta" id="pergunta" required><br>
+
+        <label for="respostaA">Resposta letra A:</label>
+        <input type="text" name="respostaA" id="respostaA" required><br>
+        
+        <label for="respostaB">Resposta letra B:</label>
+        <input type="text" name="respostaB" id="respostaB" required><br>
+
+        <label for="respostaC">Resposta letra C:</label>
+        <input type="text" name="respostaC" id="respostaC" required><br>
+
+        <label for="respostaD">Resposta letra D:</label>
+        <input type="text" name="respostaD" id="respostaD" required><br>
+
+        <label for="respostaCerta">Resposta Certa:</label>
+        <input type="text" name="respostaCerta" id="respostaCerta" required><br>
+
+        <input type="submit" value="Cadastrar">
+    </form>
+</section>
+<p id="mensagemCriacao"></p>
+
+<a href="listAllPeR.html">Verificar lista de perguntas</a><br> 
+<a href="listOnPerg.html">Buscar pergunta</a> 
+
+</body>
+</html>

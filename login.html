@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function realizarLogin(event) {
+            event.preventDefault();
+
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+
+            const formData = new FormData();
+            formData.append('usuario', usuario);
+            formData.append('senha', senha);
+
+            fetch('login.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const mensagemLogin = document.getElementById('mensagemLogin');
+                if (data.success) {
+                    mensagemLogin.textContent = data.mensagem;
+                    window.location.href = 'criarPeRmulti.html'; // Redireciona após o login
+                } else {
+                    mensagemLogin.textContent = data.mensagem;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+<h1>Login</h1>
+
+<section>
+    <form onsubmit="realizarLogin(event)">
+        <label for="usuario">Usuário:</label>
+        <input type="text" name="usuario" id="usuario" required><br>
+
+        <label for="senha">Senha:</label>
+        <input type="password" name="senha" id="senha" required><br>
+
+        <input type="submit" value="Entrar">
+    </form>
+
+    <p id="mensagemLogin"></p>
+</section>
+
+<a href="cadastro.html">Não tem conta? Cadastre-se aqui.</a> <!-- Ajustado para .html -->
+
+</body>
+</html>

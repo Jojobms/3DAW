@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Pergunta</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function buscarPergunta(indice) {
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    let pergunta = JSON.parse(this.responseText);
+                    document.getElementById("numero").value = pergunta.numero;
+                    document.getElementById("pergunta").value = pergunta.pergunta;
+                    document.getElementById("respostaA").value = pergunta.respostaA;
+                    document.getElementById("respostaB").value = pergunta.respostaB;
+                    document.getElementById("respostaC").value = pergunta.respostaC;
+                    document.getElementById("respostaD").value = pergunta.respostaD;
+                    document.getElementById("respostaCorreta").value = pergunta.respostaCerta;
+                    document.getElementById("indice").value = indice;
+                }
+            };
+            xmlhttp.open("GET", "altPeRmulti.php?indice=" + indice, true);
+            xmlhttp.send();
+        }
+
+        function atualizarPergunta() {
+            let formData = new FormData(document.getElementById("formPergunta"));
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "altPeRmulti.php", true);
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    alert("Pergunta atualizada com sucesso!");
+                    window.location.href = 'listAllPeR.html';
+                }
+            };
+            xmlhttp.send(formData);
+        }
+    </script>
+</head>
+<body>
+<h1>Editar Pergunta</h1>
+<section>
+    <form id="formPergunta" method="POST">
+        <input type="hidden" name="indice" id="indice" value="">
+        <label for="numero">Número:</label>
+        <input type="number" name="numero" id="numero" required><br>
+
+        <label for="pergunta">Pergunta:</label>
+        <input type="text" name="pergunta" id="pergunta" required><br>
+
+        <label for="respostaA">Opção A:</label>
+        <input type="text" name="respostaA" id="respostaA" required><br>
+
+        <label for="respostaB">Opção B:</label>
+        <input type="text" name="respostaB" id="respostaB" required><br>
+
+        <label for="respostaC">Opção C:</label>
+        <input type="text" name="respostaC" id="respostaC" required><br>
+
+        <label for="respostaD">Opção D:</label>
+        <input type="text" name="respostaD" id="respostaD" required><br>
+
+        <label for="respostaCorreta">Resposta Correta:</label>
+        <input type="text" name="respostaCorreta" id="respostaCorreta" required><br>
+
+        <input type="button" value="Atualizar" onclick="atualizarPergunta()">
+    </form>
+</section>
+
+<a href="listAllPeR.html">Voltar à lista de perguntas</a> 
+</body>
+</html>
