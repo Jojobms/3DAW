@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Pergunta</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function cadastrarPergunta() {
+            const dados = {
+                numero: document.getElementById('numero').value,
+                pergunta: document.getElementById('pergunta').value,
+                respostaA: document.getElementById('respostaA').value,
+                respostaB: document.getElementById('respostaB').value,
+                respostaC: document.getElementById('respostaC').value,
+                respostaD: document.getElementById('respostaD').value,
+                respostaCerta: document.getElementById('respostaCerta').value
+            };
+
+            const xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "salvarPergunta.php", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            let parametros = `numero=${dados.numero}&pergunta=${dados.pergunta}&respostaA=${dados.respostaA}&respostaB=${dados.respostaB}&respostaC=${dados.respostaC}&respostaD=${dados.respostaD}&respostaCerta=${dados.respostaCerta}`;
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    document.getElementById("mensagemCadastro").innerHTML = this.responseText;
+                }
+            };
+
+            xmlhttp.send(parametros);
+        }
+    </script>
+</head>
+<body>
+
+<h1>Cadastrar Pergunta</h1>
+
+<form onsubmit="event.preventDefault(); cadastrarPergunta();">
+    <label for="numero">Número:</label>
+    <input type="number" id="numero" required><br>
+
+    <label for="pergunta">Pergunta:</label>
+    <input type="text" id="pergunta" required><br>
+
+    <label for="respostaA">Resposta A:</label>
+    <input type="text" id="respostaA" required><br>
+
+    <label for="respostaB">Resposta B:</label>
+    <input type="text" id="respostaB" required><br>
+
+    <label for="respostaC">Resposta C:</label>
+    <input type="text" id="respostaC" required><br>
+
+    <label for="respostaD">Resposta D:</label>
+    <input type="text" id="respostaD" required><br>
+
+    <label for="respostaCerta">Resposta Correta:</label>
+    <input type="text" id="respostaCerta" required><br>
+
+    <input type="submit" value="Cadastrar">
+</form>
+
+<p id="mensagemCadastro"></p>
+
+</body>
+</html>
