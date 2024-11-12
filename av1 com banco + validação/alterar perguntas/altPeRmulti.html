@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Usuário</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function cadastrarUsuario() {
+            const formData = new FormData(document.getElementById("formUsuario"));
+            const xmlhttp = new XMLHttpRequest();
+            
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    document.getElementById("msg").innerHTML = this.responseText;
+                }
+            };
+
+            xmlhttp.open("POST", "cadastro.php", true);
+            xmlhttp.send(formData);
+        }
+    </script>
+</head>
+<body>
+
+<h1>Cadastrar Novo Usuário</h1>
+
+<section>
+    <form id="formUsuario" onsubmit="event.preventDefault(); cadastrarUsuario();">
+        <label for="usuario">Nome de Usuário:</label>
+        <input type="text" name="usuario" id="usuario" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required><br>
+
+        <label for="senha">Senha:</label>
+        <input type="password" name="senha" id="senha" required><br>
+
+        <input type="submit" value="Cadastrar">
+    </form>
+</section>
+<p id="msg"></p>
+
+<a href="login.html">Entrar</a>
+
+</body>
+</html>
