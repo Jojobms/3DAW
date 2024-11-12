@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Perguntas</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function carregarPerguntas() {
+            fetch('listAllPeR.php')
+                .then(response => response.json())
+                .then(perguntas => {
+                    let tabela = document.getElementById("tabelaPerguntas");
+                    tabela.innerHTML = '';  
+                    perguntas.forEach((pergunta, index) => {
+                        let linha = `<tr>
+                            <td>${pergunta.id}</td>
+                            <td>${pergunta.textoPergunta}</td>
+                            <td>${pergunta.textoEscolhaA}</td>
+                            <td>${pergunta.textoEscolhaB}</td>
+                            <td>${pergunta.textoEscolhaC}</td>
+                            <td>${pergunta.textoEscolhaD}</td>
+                            <td>${pergunta.opcaoCorreta}</td>
+                            <td>
+                                <a href="altPeRmulti.html?indice=${pergunta.id}">Editar</a> |
+                                <a href="#" onclick="excluirPergunta(${pergunta.id})">Excluir</a>
+                            </td>
+                        </tr>`;
+                        tabela.insertAdjacentHTML('beforeend', linha);
+                    });
+                })
+                .catch(error => console.error('Erro ao carregar perguntas:', error));
+        }
+
+        function excluirPergunta(id) {
+            if (confirm("Tem certeza que deseja excluir esta pergunta?")) {
+                fetch(`excPeR.php?id=${id}`, { method: 'POST' })
+                    .then(response => response.text())
+                    .then(mensagem => {
+                        alert(mensagem);
+                        carregarPerguntas();  
+                    })
+                    .catch(error => console.error('Erro ao excluir pergunta:', error));
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", carregarPerguntas);
+    </script>
+</head>
+<body>
+    <h1>Perguntas Adicionadas</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Pergunta</th>
+            <th>Opção A</th>
+            <th>Opção B</th>
+            <th>Opção C</th>
+            <th>Opção D</th>
+            <th>Resposta Correta</th>
+            <th>Ações</th>
+        </tr>
+        <tbody id="tabelaPerguntas"></tbody>
+    </table>
+
+    <a href="criarPeRmulti.html">Adicionar nova pergunta</a> 
+</body>
+</html>
