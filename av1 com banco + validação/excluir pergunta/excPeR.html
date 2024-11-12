@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir Pergunta</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function excluirPergunta() {
+            const indice = document.getElementById('indice').value;
+            const data = { idExcluirConfirmada: indice };
+
+            const xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "excPeR.php", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    const resposta = JSON.parse(this.responseText);
+                    document.getElementById("mensagemExclusao").innerHTML = resposta.message || resposta.error;
+                }
+            };
+            xmlhttp.send(JSON.stringify(data));
+        }
+    </script>
+</head>
+<body>
+
+<h1>Excluir Pergunta</h1>
+<p>Informe o índice da pergunta para excluir:</p>
+
+<form onsubmit="event.preventDefault(); excluirPergunta();">
+    <label for="indice">Índice:</label>
+    <input type="number" id="indice" required>
+    <input type="submit" value="Excluir">
+</form>
+
+<p id="mensagemExclusao"></p>
+
+<a href="listAllPeR.html">Voltar à lista de perguntas</a> 
+
+</body>
+</html>
